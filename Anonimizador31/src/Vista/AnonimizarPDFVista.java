@@ -2,7 +2,6 @@ package Vista;
 
 import javax.swing.*;
 import Modelo.PDFService;
-import Modelo.Texto;
 import Controlador.HistorialDAO;
 
 public class AnonimizarPDFVista extends JFrame {
@@ -33,6 +32,9 @@ public class AnonimizarPDFVista extends JFrame {
 
         final String[] ruta = {""};
 
+        // ==============================
+        //  BOTÓN SELECCIONAR PDF
+        // ==============================
         sel.addActionListener(e -> {
             JFileChooser fc = new JFileChooser();
             if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
@@ -42,11 +44,14 @@ public class AnonimizarPDFVista extends JFrame {
             }
         });
 
+        // ==============================
+        //  BOTÓN ANONIMIZAR PDF
+        // ==============================
         anon.addActionListener(e -> {
-            Texto t = new Texto(txt.getText());
-            String anonTxt = t.anonimizar();
+            String original = txt.getText();
+            String anonTxt = PDFService.anonimizarContenido(original);
             res.setText(anonTxt);
-            HistorialDAO.guardar(txt.getText(), anonTxt, userId);
+            HistorialDAO.guardar(original, anonTxt, userId);
         });
     }
 }
