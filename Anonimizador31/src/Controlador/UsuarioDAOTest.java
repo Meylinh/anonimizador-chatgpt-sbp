@@ -28,7 +28,7 @@ public class UsuarioDAOTest {
             st.executeUpdate("DELETE FROM usuarios");
 
             // Inserta usuarios de prueba
-            st.executeUpdate("INSERT INTO usuarios (usuario, password) VALUES ('juan', '1234')");
+            st.executeUpdate("INSERT INTO usuarios (usuario, password) VALUES ('admin', '1234')");
             st.executeUpdate("INSERT INTO usuarios (usuario, password) VALUES ('maria', 'abcd')");
 
         } catch (Exception e) {
@@ -38,7 +38,7 @@ public class UsuarioDAOTest {
 
     @Test
     void testLoginCorrecto() {
-        int resultado = UsuarioDAO.login("juan", "1234");
+        int resultado = UsuarioDAO.login("admin", "1234");
         assertTrue(resultado > 0, "El login con credenciales correctas debe devolver un ID válido");
     }
 

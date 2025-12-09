@@ -4,39 +4,38 @@ import java.sql.Connection;
 import java.sql.Statement;
 
 public class CrearTablas {
-
     public static void main(String[] args) {
+        try (Connection conn = ConexionBD.conectar();
+             Statement stmt = conn.createStatement()) {
 
-        try (Connection conn = ConexionBD.conectar()) {
+            // Crear tabla usuarios
+            stmt.executeUpdate(
+                "CREATE TABLE IF NOT EXISTS usuarios (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "usuario TEXT NOT NULL," +
+                "password TEXT NOT NULL)"
+            );
 
-            if (conn == null) {
-                System.out.println("La conexión falló. No se creó la base.");
-                return;
-            }
+            // Crear tabla historial
+            stmt.executeUpdate(
+                "CREATE TABLE IF NOT EXISTS historial (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "accion TEXT NOT NULL," +
+                "fecha TEXT NOT NULL)"
+            );
 
-            Statement st = conn.createStatement();
+            // Insertar usuario admin si no existe
+            stmt.executeUpdate(
+                "INSERT INTO usuarios (usuario, password) " +
+                "SELECT 'admin','1234' " +
+                "WHERE NOT EXISTS (SELECT 1 FROM usuarios WHERE usuario='admin')"
+            );
 
-            st.execute("CREATE TABLE IF NOT EXISTS usuarios (" +
-                       "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                       "usuario TEXT UNIQUE, " +
-                       "password TEXT)");
-
-            st.execute("CREATE TABLE IF NOT EXISTS historial (" +
-                       "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                       "original TEXT, " +
-                       "anonimizado TEXT, " +
-                       "fecha TEXT, " +
-                       "usuario_id INTEGER)");
-
-            st.execute("INSERT INTO usuarios (usuario, password) " +
-                       "SELECT 'admin', '1234' WHERE NOT EXISTS " +
-                       "(SELECT 1 FROM usuarios WHERE usuario='admin')");
-
-            System.out.println("Base de datos creada con éxito.");
-            System.out.println("Tablas creadas y usuario admin insertado.");
+            System.out.println("Tablas creadas correctamente y usuario admin insertado.");
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 }
+
