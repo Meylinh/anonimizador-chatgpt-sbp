@@ -12,7 +12,7 @@ public String getContenido() {
  
 public String anonimizar() { 
     
-    String[] sensibles = { "Banistmo" }; 
+    String[] sensibles = { "Banistmo", "B4nistmo", "Banistm0" }; 
     String resultado = contenido; 
  
     for (String palabra : sensibles) { 

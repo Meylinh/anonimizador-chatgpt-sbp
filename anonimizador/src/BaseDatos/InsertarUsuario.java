@@ -12,15 +12,15 @@ public class InsertarUsuario {
 
             PreparedStatement ps = conn.prepareStatement(sql);
 
-            ps.setString(1, "Meilyn");
-            ps.setString(2, "Hill");
-            ps.setString(3, "IT");
-            ps.setString(4, "admin");   // usuario
-            ps.setString(5, "1234");    // contraseña
+            ps.setString(1, "Admin");     // nombre
+            ps.setString(2, "Sistema");   // apellido
+            ps.setString(3, "IT");        // departamento
+            ps.setString(4, "admin");     // usuario
+            ps.setString(5, "admin");     // contraseña
 
             ps.executeUpdate();
 
-            System.out.println("Usuario creado.");
+            System.out.println("Usuario admin/admin creado correctamente.");
 
         } catch (Exception e) {
             System.out.println("Error insertando usuario: " + e.getMessage());
