@@ -3,6 +3,7 @@ package Vista;
 import javax.swing.*;
 import Modelo.PDFService;
 import Controlador.HistorialDAO;
+import java.time.LocalDateTime;
 
 public class AnonimizarPDFVista extends JFrame {
 
@@ -11,6 +12,7 @@ public class AnonimizarPDFVista extends JFrame {
         setSize(600,500);
         setLayout(null);
         setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         JButton sel = new JButton("Seleccionar PDF");
         sel.setBounds(20,20,150,30);
@@ -26,32 +28,33 @@ public class AnonimizarPDFVista extends JFrame {
         add(anon);
 
         JTextArea res = new JTextArea();
+        res.setEditable(false);
         JScrollPane sc2 = new JScrollPane(res);
         sc2.setBounds(20,260,550,150);
         add(sc2);
 
         final String[] ruta = {""};
 
-        // ==============================
-        //  BOTÓN SELECCIONAR PDF
-        // ==============================
         sel.addActionListener(e -> {
             JFileChooser fc = new JFileChooser();
-            if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            if(fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
                 ruta[0] = fc.getSelectedFile().getAbsolutePath();
-                String texto = PDFService.leerPDF(ruta[0]);
-                txt.setText(texto);
+                txt.setText(PDFService.leerPDF(ruta[0]));
             }
         });
 
-        // ==============================
-        //  BOTÓN ANONIMIZAR PDF
-        // ==============================
         anon.addActionListener(e -> {
             String original = txt.getText();
+            if(original.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "No hay contenido para anonimizar.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             String anonTxt = PDFService.anonimizarContenido(original);
             res.setText(anonTxt);
-            HistorialDAO.guardar(original, anonTxt, userId);
+
+            String fecha = LocalDateTime.now().toString();
+            HistorialDAO.insertar(original, anonTxt, userId, fecha);
+            JOptionPane.showMessageDialog(this, "PDF anonimizado y guardado en historial.");
         });
     }
 }

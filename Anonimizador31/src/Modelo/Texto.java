@@ -11,14 +11,13 @@ public class Texto {
         String t = contenido;
 
    
-        // --- Palabras que ya tenías ---
+        // --- Palabras viejas ---
         t = t.replaceAll("(?i)banistmo", "***");
         t = t.replaceAll("(?i)sbp", "***");
         t = t.replaceAll("(?i)banco", "***");
         t = t.replaceAll("(?i)panamá", "***");
 
-        // --- Nuevas reglas de anonimización ---
-
+       
         // Nombres completos (dos palabras con mayúscula)
         t = t.replaceAll("(?i)[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+\\s+[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+", "***");
 

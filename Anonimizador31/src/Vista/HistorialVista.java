@@ -1,35 +1,46 @@
 package Vista;
 
 import javax.swing.*;
-import java.sql.ResultSet;
+import javax.swing.table.DefaultTableModel;
+import java.util.List;
 import Controlador.HistorialDAO;
 
 public class HistorialVista extends JFrame {
 
     public HistorialVista(int userId) {
         setTitle("Historial");
-        setSize(600,400);
+        setSize(600, 400);
         setLayout(null);
         setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
+        // Columnas de la tabla
         String[] col = {"Original", "Anonimizado", "Fecha"};
-        String[][] data = new String[50][3];
 
-        int i = 0;
+        // Modelo de tabla
+        DefaultTableModel modelo = new DefaultTableModel(col, 0);
 
-        try {
-            ResultSet rs = HistorialDAO.obtener(userId);
-            while (rs.next()) {
-                data[i][0] = rs.getString("original");
-                data[i][1] = rs.getString("anonimizado");
-                data[i][2] = rs.getString("fecha");
-                i++;
+        // Obtener historial del usuario
+        List<HistorialDAO.Historial> registros = HistorialDAO.listar();
+
+        for (HistorialDAO.Historial h : registros) {
+            if (h.getUserId() == userId) { // solo los del usuario actual
+                Object[] fila = {h.getOriginal(), h.getAnonimizado(), h.getFecha()};
+                modelo.addRow(fila);
             }
-        } catch (Exception e) {}
+        }
 
-        JTable tabla = new JTable(data, col);
+        // Crear tabla y scroll
+        JTable tabla = new JTable(modelo);
         JScrollPane sc = new JScrollPane(tabla);
-        sc.setBounds(20,20,550,300);
+        sc.setBounds(20, 20, 550, 300);
         add(sc);
+    }
+
+    // Método para probar la ventana
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            new HistorialVista(1).setVisible(true);
+        });
     }
 }

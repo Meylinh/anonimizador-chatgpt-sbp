@@ -2,17 +2,12 @@ package BaseDatos;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class ConexionBD {
+    private static final String URL = "jdbc:sqlite:anonimador.db";
 
-    private static final String URL = "jdbc:sqlite:anonimizador.db";
-
-    public static Connection conectar() {
-        try {
-            return DriverManager.getConnection(URL);
-        } catch (Exception e) {
-            System.out.println("Error al conectar: " + e.getMessage());
-            return null;
-        }
+    public static Connection conectar() throws SQLException {
+        return DriverManager.getConnection(URL);
     }
 }
